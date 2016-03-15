@@ -1,6 +1,8 @@
 package chatroom;
 
 import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ChatRoomController {
 	private ChatRoom model;
@@ -14,27 +16,55 @@ public class ChatRoomController {
 	
 	public void runChatRoom() throws IOException {
 		this.view.startChatRoom();
-		this.model.addClient();
-		/*Thread client = new Thread(new Runnable() {
+
+		new Thread(new Runnable() {
 			public void run() {
 				try {
-					model.addClient();
-				} catch (IOException exception)
-				{
-					exception.printStackTrace();
+					System.out.println("starting thread 1");
+					while (true)
+					{
+						model.addClient();
+					}
+				} catch (IOException e) {
+					System.out.println(e);
 				}
+
 			}
-		});
-		client.start();*/
+		}).start();
+				
+		System.out.println("about to start thread 2");
 		
-        PrintWriter out =
-                new PrintWriter(model.clientSockets.get(0).getOutputStream(), true);                   
-            BufferedReader in = new BufferedReader(
-                new InputStreamReader(model.clientSockets.get(0).getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                out.println(inputLine);
-                System.out.println("client says: " + inputLine);
-            }
+		Thread message = new Thread(new Runnable() {
+				public void run() {
+					try {
+						while (model.clientSockets.size() == 0)
+						{
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e)
+							{
+								//nothing?
+							}
+						}
+						System.out.println("starting thread 2");
+				        PrintWriter out =
+				                new PrintWriter(model.clientSockets.get(0).clientSocket.getOutputStream(), true);                   
+				       BufferedReader in = new BufferedReader(
+				                new InputStreamReader(model.clientSockets.get(0).clientSocket.getInputStream()));
+				       String inputLine;
+				       while ((inputLine = in.readLine()) != null) {
+				    	   out.println(inputLine);
+				           System.out.println("Client: " + inputLine);
+				       }
+					} catch (IOException e)
+					{
+						System.out.println(e);
+					}
+				}
+			});
+		message.start();
+
+
+
 	}
 }

@@ -1,23 +1,25 @@
 package chatroom;
 
+import client.*;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 
 public class ChatRoom {
-	ServerSocket serverSocket;
-	ArrayList<Socket> clientSockets;
-	Socket client;
+	public ServerSocket serverSocket;
+	public ArrayList<Client> clientSockets;
+	Client newClient;
 	
 	public ChatRoom(int portNumber) throws IOException
 	{
 		serverSocket = new ServerSocket(portNumber);
-		clientSockets = new ArrayList<Socket>();
+		clientSockets = new ArrayList<Client>();
 	}
 	
 	public void addClient() throws IOException {
-		client = serverSocket.accept();
-		clientSockets.add(client);
+		
+		newClient = new Client(serverSocket.accept());
+		clientSockets.add(newClient);
 	}
 	
 }

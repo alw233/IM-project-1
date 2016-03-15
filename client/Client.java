@@ -4,6 +4,18 @@ import java.io.*;
 import java.net.*;
 
 public class Client {
+	public Socket clientSocket;
+	
+	public Client(Socket connection)
+	{
+		clientSocket = connection;
+	}
+	
+	
+	
+	
+	
+	
     public static void main(String[] args) throws IOException {
         
         if (args.length != 2) {
@@ -29,7 +41,7 @@ public class Client {
             String userInput;
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
-                System.out.println("echo: " + in.readLine());
+                System.out.println("echo from server: " + in.readLine());
             }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
