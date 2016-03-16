@@ -13,7 +13,8 @@ public class Server {
 		if (args.length != 1) {
 			Scanner scanner = new Scanner(System.in);
             System.out.println("Enter port number: ");
-            port = scanner.nextInt();  
+            port = scanner.nextInt(); 
+            scanner.close();
         }
 		else
 		{
@@ -22,7 +23,8 @@ public class Server {
 		
 		chatroom.ChatRoom chat = new ChatRoom(port);
 		chatroom.ChatRoomView chatView = new ChatRoomView();
-		chatroom.ChatRoomController controller = new ChatRoomController(chat, chatView);
+		chatroom.ChatRoomController controller =
+				new ChatRoomController(chat, chatView);
 
 	}
 }
