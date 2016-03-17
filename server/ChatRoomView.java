@@ -10,6 +10,8 @@ import java.awt.Color;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -29,8 +31,10 @@ public class ChatRoomView extends JFrame {
     JTextField typeMessageBox;
 
     public ChatRoomView(ChatRoomController cc) {
+    	Color blue = new Color(100,149,237);
     	c = cc;
         initUI();
+        panel.setBackground(blue);
     }
 
     public final void initUI() {
@@ -47,8 +51,9 @@ public class ChatRoomView extends JFrame {
 
         
         // Set button borders
-        host.setBounds(40, 30, 150, 25);
-        join.setBounds(40, 80, 150, 25);
+        host.setBounds(125, 90, 150, 25);
+        join.setBounds(125, 140, 150, 25);
+       
 
   
         // Add action listeners to the buttons
@@ -91,15 +96,28 @@ public class ChatRoomView extends JFrame {
     
 
     	JTextArea port = new JTextArea("Port Number");
-    	port.setBounds(40, 30, 150, 25);
+    	port.setBounds(125, 60, 150, 25);
     
     	
     	JTextArea username = new JTextArea("User Name");    	
-    	username.setBounds(40, 60, 150, 25);	
+    	username.setBounds(125, 90, 150, 25);	
   
-       	
+    	  port.addMouseListener(new MouseAdapter(){
+              @Override
+              public void mouseClicked(MouseEvent e){
+                  port.setText("");
+              }
+          });
+    	  username.addMouseListener(new MouseAdapter(){
+              @Override
+              public void mouseClicked(MouseEvent e){
+                  username.setText("");
+              }
+          });
+    	
+    	 
     	JButton start = new JButton("Start Chat");
-    	start.setBounds(40, 150, 150, 25);
+    	start.setBounds(125, 140, 150, 25);
         start.addActionListener(new ActionListener(){
            	
 			@Override
@@ -139,16 +157,36 @@ public class ChatRoomView extends JFrame {
     	panel.updateUI();
     	
     	JTextArea port = new JTextArea("Port Number");
-    	port.setBounds(40, 30, 150, 25);
+    	port.setBounds(125, 50, 150, 25);
     
-    	JTextArea host = new JTextArea("Host Number");
-    	host.setBounds(40, 70, 150, 25);
+    	JTextArea host = new JTextArea("Host Name");
+    	host.setBounds(125, 80, 150, 25);
     	
     	JTextArea username = new JTextArea("User Name");    	
-    	username.setBounds(40, 110, 150, 25);	
+    	username.setBounds(125, 110, 150, 25);
+    	
+    	  port.addMouseListener(new MouseAdapter(){
+              @Override
+              public void mouseClicked(MouseEvent e){
+                  port.setText("");
+              }
+          });
+    	  username.addMouseListener(new MouseAdapter(){
+              @Override
+              public void mouseClicked(MouseEvent e){
+                  username.setText("");
+              }
+          });
+    	  
+    	  host.addMouseListener(new MouseAdapter(){
+    		  @Override
+    		  public void mouseClicked(MouseEvent e){
+    			  host.setText("");
+    		  }
+    	  });
     	
     	JButton join = new JButton("Join Chat");
-    	join.setBounds(40, 160, 150, 25);   
+    	join.setBounds(125, 160, 150, 25);   
         join.addActionListener(new ActionListener(){
            	
 			@Override
@@ -235,7 +273,7 @@ public class ChatRoomView extends JFrame {
     	add(panel);
     	
     	
-        setTitle("Advanced Programming IM Chatroom");
+        setTitle("Advanced Programming Chat");
         setSize(1000, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
