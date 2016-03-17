@@ -11,7 +11,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -107,7 +108,7 @@ public class ChatRoomView extends JFrame {
 				b.port = Integer.parseInt(realPort);
 				b.username = username.getText();
 				b.ButtonListenerStart();	
-				statusbar.setText("Starting Chat");
+				statusbar.setText("Started Chat");
 			}
         });
     	
@@ -157,7 +158,7 @@ public class ChatRoomView extends JFrame {
 				b.username = username.getText();
 				b.host = host.getText();
 				b.ButtonListenerJoinC();	
-				statusbar.setText("Joining Chat");
+				statusbar.setText("Joined Chat");
 			}
         });
     	
@@ -186,7 +187,7 @@ public class ChatRoomView extends JFrame {
         
     }
     
-    public void chatRoom(ActionListener sendButtonListener) {
+    public void chatRoom(ChatRoomController b) {
     	
     	panel.removeAll();
     	panel.updateUI();
@@ -217,8 +218,16 @@ public class ChatRoomView extends JFrame {
          c.gridwidth = 700;
          panel.add(typeMessageBox, c);
          
+         Action action = new AbstractAction(){
+        	 @Override
+        	 public void actionPerformed(ActionEvent e){
+        		 b.getSendButtonListener();
+        	 }
+         };
+         
          JButton sendMessage = new JButton("Send");
-         sendMessage.addActionListener(sendButtonListener);
+         sendMessage.addActionListener(action);
+         typeMessageBox.addActionListener(action);
          c.gridx = GridBagConstraints.RELATIVE;
          c.weightx = 0;
          panel.add(sendMessage, c);
