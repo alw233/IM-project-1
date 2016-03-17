@@ -126,7 +126,7 @@ public class ChatRoomView extends JFrame {
 				b.port = Integer.parseInt(realPort);
 				b.username = username.getText();
 				b.ButtonListenerStart();	
-				statusbar.setText("Started Chat");
+				statusbar.setText("Started Chat as " + username.getText());
 			}
         });
     	
@@ -196,7 +196,7 @@ public class ChatRoomView extends JFrame {
 				b.username = username.getText();
 				b.host = host.getText();
 				b.ButtonListenerJoinC();	
-				statusbar.setText("Joined Chat");
+				statusbar.setText("Joined Chat as " + username.getText());
 			}
         });
     	
