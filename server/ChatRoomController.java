@@ -1,9 +1,13 @@
+
 package server;
+
+import java.io.*;
+import java.util.Scanner;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.Scanner;
+
+import javax.swing.JButton;
 
 import javax.swing.JButton;
 
@@ -25,7 +29,6 @@ public class ChatRoomController {
 			view.HostView(this);
 		}
 	    public void ButtonListenerStart(){
-		       System.out.println(username);
 	            new Thread(new Runnable() {
 	            	public void run() {
 	            		try {
@@ -41,6 +44,7 @@ public class ChatRoomController {
 	            		Client host = new Client ("localhost", port, username);
 	            	}
 	            }).start();
+	            startSystem();
 			
 		}    
 	    
@@ -49,10 +53,47 @@ public class ChatRoomController {
 	    }
 		
 		public void ButtonListenerJoinC(){
-		
-			//System.out.println("host " + host + " port " + port + " username " + username);
-			Client client = new Client(host, port, username);
+			   new Thread(new Runnable() {
+	            	public void run() {
+	            		Client host = new Client ("localhost", port, username);
+	            	}
+	            }).start();
+	            startSystem();
 			
+		}
+		
+		public void startSystem() {
+			view.chatRoom(getSendButtonListener());
+			redirectOutput();
+		}
+		
+		ActionListener getSendButtonListener() {
+			return new ActionListener() {
+				@Override public void actionPerformed (ActionEvent e) {
+					view.sendMessage();
+				}
+			};
+		}
+		
+		private void redirectOutput() {
+			  OutputStream outPut = new OutputStream() {
+			    @Override
+			    public void write(final int byteString) throws IOException {
+			      view.newMessage(String.valueOf((char) byteString));
+			    }
+			 
+			    @Override
+			    public void write(byte[] byteString, int off, int len) throws IOException {
+			      view.newMessage(new String(byteString, off, len));
+			    }
+			 
+			    @Override
+			    public void write(byte[] byteString) throws IOException {
+			      write(byteString, 0, byteString.length);
+			    }
+			  };
+			  System.setOut(new PrintStream(outPut, true));
+			  System.setErr(new PrintStream(outPut, true));
 		}
 	
 	}	
