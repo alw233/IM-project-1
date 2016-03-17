@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 
 import javax.swing.JButton;
 
@@ -63,16 +64,14 @@ public class ChatRoomController {
 		}
 		
 		public void startSystem() {
-			view.chatRoom(getSendButtonListener());
+			view.chatRoom(this);
 			redirectOutput();
 		}
 		
-		ActionListener getSendButtonListener() {
-			return new ActionListener() {
-				@Override public void actionPerformed (ActionEvent e) {
+		public void getSendButtonListener() {
+			
 					view.sendMessage();
-				}
-			};
+			
 		}
 		
 		private void redirectOutput() {
