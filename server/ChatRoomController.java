@@ -17,6 +17,7 @@ public class ChatRoomController {
 		public String host;
 		public String username;
 		public ChatRoomView view;
+		public String fileName;
 		
 		public ChatRoomController(){
 			view = new ChatRoomView(this);
@@ -70,8 +71,13 @@ public class ChatRoomController {
 		
 		public void getSendButtonListener() {
 			
-					view.sendMessage();
+			view.sendMessage();
 			
+		}
+	
+		
+		public void readFileListener(){			
+			view.sendFile();
 		}
 		
 		private void redirectOutput() {
@@ -93,6 +99,14 @@ public class ChatRoomController {
 			  };
 			  System.setOut(new PrintStream(outPut, true));
 			  System.setErr(new PrintStream(outPut, true));
+		}
+		public void setInfo(String hostName, int portNumber, String name) {
+			host = hostName;
+			port = portNumber;
+			username = name;
+		}
+		public void setInfo(String file) {
+			fileName = file;
 		}
 	
 	}	
