@@ -21,13 +21,14 @@ public class Client {
 	
 	public void runChat()
 	{
-
+		
     		try (
     				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                     BufferedReader in = new BufferedReader(
                     		new InputStreamReader(clientSocket.getInputStream()));
 
                 ) {
+    				out.println(userName + " joined the chat");
                     String userInput;
                     while (true) {
                     	if (in.ready()) {
