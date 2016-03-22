@@ -1,5 +1,6 @@
 package server;
 
+
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -7,33 +8,48 @@ import java.util.ArrayList;
 public class Server {
 	public ServerSocket serverSocket;
 	public ArrayList<Socket> clientSockets;
-	public ArrayList<String> messageHistoryQueue;
+	public final ArrayList<byte []> messageHistoryQueue = new ArrayList<byte []>();
 	Socket newClient;
 	
-	public Server(Integer portNumber) throws IOException
+	public Server(final Integer portNumber) throws IOException
 	{
-		serverSocket = new ServerSocket(portNumber);
-		clientSockets = new ArrayList<Socket>();
-		messageHistoryQueue = new ArrayList<String>();
-		
-		runChatRoom();
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+				serverSocket = new ServerSocket(portNumber);
+				clientSockets = new ArrayList<Socket>();
+				
+				runChatRoom();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
 	}
 	
-
-	public void runChatRoom() throws IOException {
-		
+	public void runChatRoom() throws IOException {		
 		try {
-			//System.out.println("starting thread 1");
 			while (true)
 			{
 				Socket socket = serverSocket.accept();
 				clientSockets.add(socket);
-				//System.out.println("One client added in.");
 				new SocketThread(socket, this).start();
 			}
 		} catch (IOException e) {
 			System.out.println(e);
 		}
 	}
-		
+	
+	public void close() {
+		try {
+		for (int i = 0; i < clientSockets.size(); i++) {
+			BufferedReader in = new BufferedReader(
+	                new InputStreamReader(clientSockets.get(i).getInputStream()));
+			new PrintWriter(clientSockets.get(i).getOutputStream(), true).println("Host has ended this chatroom.");
+		}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

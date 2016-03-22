@@ -1,4 +1,3 @@
-
 package server;
 
 import java.io.*;
@@ -18,6 +17,9 @@ public class ChatRoomController {
 		public String username;
 		public ChatRoomView view;
 		public String fileName;
+		Client client;
+		Boolean isHost = false;
+		Server server;
 		
 		public ChatRoomController(){
 			view = new ChatRoomView(this);
@@ -31,22 +33,17 @@ public class ChatRoomController {
 			view.HostView(this);
 		}
 	    public void ButtonListenerStart(){
-	            new Thread(new Runnable() {
-	            	public void run() {
-	            		try {
-	                		server.Server chat = new server.Server(port);
-	            		} catch (IOException e) {
-	            			e.printStackTrace();
-	            		}
-	            	}
-	            }).start();
+
+    		try {
+    			isHost = true;
+        		server = new server.Server(port);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
 	    		
-	            new Thread(new Runnable() {
-	            	public void run() {
-	            		Client host = new Client ("localhost", port, username);
-	            	}
-	            }).start();
-	            startSystem();
+
+	        client = new Client ("localhost", port, username);
+	        startSystem();
 			
 		}    
 	    
@@ -55,13 +52,9 @@ public class ChatRoomController {
 	    }
 		
 		public void ButtonListenerJoinC(){
-			   new Thread(new Runnable() {
-	            	public void run() {
-	            		Client host = new Client ("localhost", port, username);
-	            	}
-	            }).start();
-	            startSystem();
-			
+			client = new Client (host, port, username);
+
+			startSystem();
 		}
 		
 		public void startSystem() {
@@ -70,45 +63,50 @@ public class ChatRoomController {
 		}
 		
 		public void getSendButtonListener() {
-			
 			view.sendMessage();
-			
 		}
 	
 		
-		public void readFileListener(){			
-			view.sendFile();
+		public void readFileListener( String fileName){			
+			new Thread(new Runnable() {
+				public void run() {
+					client.sendFile(fileName);
+				}
+			}).start();
 		}
 		
 		private void redirectOutput() {
-			  OutputStream outPut = new OutputStream() {
-			    @Override
+			OutputStream outPut = new OutputStream() {
+				@Override
 			    public void write(final int byteString) throws IOException {
-			      view.newMessage(String.valueOf((char) byteString));
+					view.newMessage(String.valueOf((char) byteString));
 			    }
 			 
 			    @Override
 			    public void write(byte[] byteString, int off, int len) throws IOException {
-			      view.newMessage(new String(byteString, off, len));
+			    	view.newMessage(new String(byteString, off, len));
 			    }
 			 
 			    @Override
 			    public void write(byte[] byteString) throws IOException {
-			      write(byteString, 0, byteString.length);
+			    	write(byteString, 0, byteString.length);
 			    }
 			  };
 			  System.setOut(new PrintStream(outPut, true));
 			  System.setErr(new PrintStream(outPut, true));
 		}
+		
 		public void setInfo(String hostName, int portNumber, String name) {
 			host = hostName;
 			port = portNumber;
 			username = name;
 		}
-		public void setInfo(String file) {
-			fileName = file;
+		
+		public void closeServer() {
+			if (isHost) {
+				System.out.println("is host");
+				server.close();
+			}
 		}
 	
 	}	
-
-
